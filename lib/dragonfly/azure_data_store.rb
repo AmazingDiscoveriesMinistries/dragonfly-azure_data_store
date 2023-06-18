@@ -20,6 +20,10 @@ module Dragonfly
       @legacy_meta = opts[:legacy_meta]
     end
 
+    def server_root
+      './public/'
+    end
+
     def write(content, _opts = {})
       filename = path_for(content.name || 'file')
       path = full_path(filename)
@@ -68,7 +72,7 @@ module Dragonfly
     def url_for(uid, opts = {})
       scheme = opts[:scheme] || url_scheme
       host   = opts[:host]   || url_host ||
-               "#{account_name}.blob.core.windows.net"
+        "#{account_name}.blob.core.windows.net"
       "#{scheme}://#{host}/#{container_name}/#{full_path(uid)}"
     end
 
@@ -89,11 +93,11 @@ module Dragonfly
 
     def container
       @container ||= begin
-        storage(:get_container_properties, container_name)
-      rescue Azure::Core::Http::HTTPError => e
-        raise if e.status_code != 404
-        storage(:create_container, container_name)
-      end
+                       storage(:get_container_properties, container_name)
+                     rescue Azure::Core::Http::HTTPError => e
+                       raise if e.status_code != 404
+                       storage(:create_container, container_name)
+                     end
     end
 
     def path_for(filename)
